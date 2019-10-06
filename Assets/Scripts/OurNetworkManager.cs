@@ -5,7 +5,7 @@ using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking.Unity;
 using UnityEngine;
 
-public class NetworkManager : NetworkManagerBehavior
+public class OurNetworkManager : NetworkManagerBehavior
 {
     // Start is called before the first frame update
     void Start()
