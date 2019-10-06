@@ -10,6 +10,7 @@ public class Painter : MonoBehaviour
     public float maxInk = 10f;
     public float threshold = 0.001f;
     public GameObject template;
+    public OurNetworkManager network;
     private bool isDragging = false;
     private List<Vector3> lineBuffer;
     private LineRenderer lineRenderer;
@@ -52,9 +53,10 @@ public class Painter : MonoBehaviour
             {
                 Destroy(obj);
             }
-
-            maxInk = 10;
+            network.ResetLevel();
         }
+
+    
         
         
         if (this.isDragging && this.maxInk >= 0) {
@@ -90,9 +92,6 @@ public class Painter : MonoBehaviour
     }
 
     void AddLine() {
-        var line = Instantiate(this.template, new Vector3(0, 0, 0), new Quaternion());
-        line.tag = "dynamic";
-        var buildPath = line.GetComponent<BuildPath>();
-        buildPath.Path = this.lineBuffer;
+        this.network.AddLine(this.lineBuffer);
     }
 }
