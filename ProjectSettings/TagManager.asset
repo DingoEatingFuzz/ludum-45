@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - fluid
+  - dynamic
   layers:
   - Default
   - TransparentFX
