@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(LineRenderer))]
 public class Painter : MonoBehaviour
 {
+    public float maxInk = 10f;
     public float threshold = 0.001f;
     public GameObject template;
     private bool isDragging = false;
@@ -12,6 +15,8 @@ public class Painter : MonoBehaviour
     private LineRenderer lineRenderer;
     private Camera cam;
     private int lineCount = 0;
+    public Text textUI;
+
     // Start is called before the first frame update
 
     void Awake()
@@ -23,6 +28,8 @@ public class Painter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        textUI.text = maxInk <= 0 ? "0" : Math.Round(maxInk, 2).ToString();
+
         if (Input.GetMouseButtonDown(0)) {
             this.isDragging = true;
             this.lineBuffer = new List<Vector3>();
@@ -45,9 +52,12 @@ public class Painter : MonoBehaviour
             {
                 Destroy(obj);
             }
-        }
 
-        if (this.isDragging) {
+            maxInk = 10;
+        }
+        
+        
+        if (this.isDragging && this.maxInk >= 0) {
             this.Drag();
         }
     }
@@ -70,6 +80,11 @@ public class Painter : MonoBehaviour
         lineRenderer.positionCount = lineBuffer.Count;
         for (int i = this.lineCount; i < lineBuffer.Count; i++) {
             lineRenderer.SetPosition(i, lineBuffer[i]);
+            if (this.lineCount > 1)
+            {
+                this.maxInk -= (lineBuffer[i]-lineBuffer[i-1]).magnitude;
+            }
+
         }
         lineCount = lineBuffer.Count;
     }
