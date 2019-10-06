@@ -36,9 +36,9 @@ namespace BeardedManStudios.Forge.Networking.Unity.Lobby
 		{
 			ToggleInteractables(interactableValue);
 			AssociatedPlayer = associatedPlayer;
-            ChangeAvatarID(associatedPlayer.AvatarID);
+            //ChangeAvatarID(associatedPlayer.AvatarID);
             ChangeName(associatedPlayer.Name);
-            ChangeTeam(associatedPlayer.TeamID);
+            //ChangeTeam(associatedPlayer.TeamID);
 		}
 
 		public void SetParent(Transform parent)
@@ -104,8 +104,6 @@ namespace BeardedManStudios.Forge.Networking.Unity.Lobby
             for (int i = 0; i < Buttons.Length; ++i)
                 Buttons[i].interactable = value;
 
-            AvatarBG.raycastTarget = value;
-			PlayerTeamID.raycastTarget = value;
 			PlayerName.interactable = value;
 		}
 

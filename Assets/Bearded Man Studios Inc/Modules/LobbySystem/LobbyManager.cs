@@ -56,6 +56,7 @@ namespace BeardedManStudios.Forge.Networking.Unity.Lobby
 			if (NetworkManager.Instance.IsServer)
 			{
 				SetupComplete();
+                GameObject.Find("StartGameButton").GetComponentInChildren<Button>().interactable = true;
 				return;
 			}
 
