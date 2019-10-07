@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Vector2 screenPoint = Camera.current.WorldToViewportPoint(gameObject.transform.position);
+        Vector2 screenPoint = Camera.main.WorldToViewportPoint(gameObject.transform.position);
         if (screenPoint.x < 0 || screenPoint.x > 1 || screenPoint.y < 0 || screenPoint.y > 1)
         {
             ResetPlayer();
@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
         {
             ResetPlayer();
             //Do Scene Change
+        }
+        if (collision.name == "DeathBox")
+        {
+            ResetPlayer();
         }
     }
 
