@@ -47,20 +47,13 @@ public class Painter : MonoBehaviour
         if (Input.GetMouseButtonUp(0)) {
             this.isDragging = false;
             // Add the element to the screen
-            if(this.lineBuffer.Count >2)this.AddLine();
+            if (this.lineBuffer.Count > 2) this.AddLine();
             this.lineBuffer = new List<Vector3>();
             this.lineCount = 0;
             this.lineRenderer.positionCount = 0;
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Debug.Log("Deleting all the things!");
-            var toDelete = GameObject.FindGameObjectsWithTag("dynamic");
-            Debug.Log($"Deleting {toDelete.Length} Objects");
-            foreach (var obj in toDelete)
-            {
-                Destroy(obj);
-            }
             network.ResetLevel();
         }
 
