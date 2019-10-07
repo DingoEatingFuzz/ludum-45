@@ -6,6 +6,7 @@ TagManager:
   tags:
   - fluid
   - dynamic
+  - wall
   layers:
   - Default
   - TransparentFX
