@@ -58,7 +58,7 @@ public class Painter : MonoBehaviour
         }
 
 
-        if (this.isDragging && this.inkLevel >= 0) {
+        if (this.isDragging && this.inkLevel > 0) {
             this.Drag();
         }
     }
@@ -68,8 +68,16 @@ public class Painter : MonoBehaviour
         mousePos.z = cam.nearClipPlane;
         var mouseWorld = cam.ScreenToWorldPoint(mousePos);
         mouseWorld.z = -1;
-
+        
         if (lineBuffer.Count == 0 || Vector2.Distance(mouseWorld, lineBuffer[lineBuffer.Count - 1]) > this.threshold) {
+            if (lineBuffer.Count > 0)
+            {
+                while (inkLevel - (lineBuffer[lineBuffer.Count - 1] - mouseWorld).magnitude < 0)
+                {
+                    mouseWorld = Vector3.MoveTowards(mouseWorld, lineBuffer[lineBuffer.Count - 1], .01f);
+                }
+            }
+
             lineBuffer.Add(mouseWorld);
             this.UpdateLine();
         }
@@ -83,7 +91,7 @@ public class Painter : MonoBehaviour
             lineRenderer.SetPosition(i, lineBuffer[i]);
             if (this.lineCount > 1)
             {
-                network.SetInkLevel((inkLevel - (lineBuffer[i]-lineBuffer[i-1]).magnitude) / maxInk);
+                network.SetInkLevel((inkLevel - (lineBuffer[i] - lineBuffer[i - 1]).magnitude) / maxInk);
             }
 
         }
@@ -97,5 +105,6 @@ public class Painter : MonoBehaviour
     public void setInkLevelPercent(float pct)
     {
         inkLevel = maxInk * pct;
+        if (Math.Round(inkLevel, 1) == 0) inkLevel = 0;
     }
 }
