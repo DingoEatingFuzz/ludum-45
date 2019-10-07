@@ -25,8 +25,7 @@ public class Lobby : MonoBehaviour
         var players = this.lobby.LobbyPlayers;
         var isServer = NetworkManager.Instance.IsServer;
 
-        //this.startButton.SetActive(isServer && players.Count >= 2);
-        this.startButton.SetActive(true);
+        this.startButton.SetActive(isServer && players.Count >= 2);
 
         if (players.Count >= 2) {
             this.statusText.text = "Good, you're both here!";
