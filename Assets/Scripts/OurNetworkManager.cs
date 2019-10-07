@@ -33,7 +33,7 @@ public class OurNetworkManager : NetworkManagerBehavior
     IEnumerator Countdown()
     {
         yield return new WaitForSeconds(0.5f);
-        this.SetLevel(0, false);
+        this.SetLevel(1, false);
     }
 
     IEnumerator LevelWinCountdown()
