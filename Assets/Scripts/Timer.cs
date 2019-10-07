@@ -29,8 +29,7 @@ public class Timer : MonoBehaviour
 
     string FormattedTime() {
         float duration = Time.time - beginning;
-        // var span = new TimeSpan(0, 0, 0, (int)duration);
-        var span = new TimeSpan(0, 0, 0, 10000);
+        var span = new TimeSpan(0, 0, 0, (int)duration);
 
         if (span.Hours > 0) {
             return $"{span.Hours}:{pad(span.Minutes)}:{pad(span.Seconds)}";
