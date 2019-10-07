@@ -18,11 +18,12 @@ public class Painter : MonoBehaviour
     private LineRenderer lineRenderer;
     private Camera cam;
     private int lineCount = 0;
-    public Text textUI;
+    public Text attemptText;
     public Slider inkMeter;
     private float fullInkWidth;
     public bool readOnly;
     private float lineAmount;
+    public int attempts;
 
     // Start is called before the first frame update
 
@@ -32,12 +33,13 @@ public class Painter : MonoBehaviour
         this.cam = Camera.main;
         //network.SetInkLevel(1);
         this.inkMeter = GameObject.Find("InkLevel").GetComponent<Slider>();
+        this.attemptText = GameObject.Find("Text").GetComponent <Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // textUI.text = inkLevel <= 0 ? "0" : Math.Round(inkLevel, 2).ToString();
+        this.attemptText.text = this.attempts <= 0 ? "0" : this.attempts.ToString();
         this.inkMeter.maxValue = this.maxInk;
         this.inkMeter.value = this.inkLevel - this.lineAmount;
 
@@ -111,5 +113,10 @@ public class Painter : MonoBehaviour
     {
         inkLevel = maxInk * pct;
         if (Math.Round(inkLevel, 1) == 0) inkLevel = 0;
+    }
+
+    public void setAttempts(int num)
+    {
+        this.attempts = num;
     }
 }

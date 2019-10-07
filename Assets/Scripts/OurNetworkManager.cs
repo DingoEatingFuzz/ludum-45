@@ -24,7 +24,8 @@ public class OurNetworkManager : NetworkManagerBehavior
     public bool Debugging = false;
     public List<LevelRecord> levels;
     private LevelRecord curLevel;
-    private GameObject curLevelObj; 
+    private GameObject curLevelObj;
+    private int Attempts = 0;
 
     IEnumerator Countdown()
     {
@@ -52,9 +53,11 @@ public class OurNetworkManager : NetworkManagerBehavior
         if (this.Debugging) {
             this._resetLevel();
             this._setInkLevel(1);
+            this._setAttempts(this.Attempts + 1);
         } else {
             this.networkObject.SendRpc(RPC_RESET_LEVEL, Receivers.All);
             this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, 1.0f);
+            this.networkObject.SendRpc(RPC_SET_ATTEMPTS, Receivers.All, this.Attempts + 1);
         }
     }
 
@@ -93,10 +96,12 @@ public class OurNetworkManager : NetworkManagerBehavior
         {
             this._setLevel(levelId);
             this._setInkLevel(1);
+            this._setAttempts(0);
         } else
         {
             this.networkObject.SendRpc(RPC_SET_LEVEL, Receivers.All, levelId);
             this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, 1.0f);
+            this.networkObject.SendRpc(RPC_SET_ATTEMPTS, Receivers.All, 0);
         }
     }
 
@@ -137,6 +142,15 @@ public class OurNetworkManager : NetworkManagerBehavior
         });
     }
 
+    public override void setAttempts(RpcArgs args)
+    {
+        MainThreadManager.Run(() =>
+        {
+            var num = args.GetNext<int>();
+            this._setAttempts(num);
+        });
+    }
+
     public override void setInkLevel(RpcArgs args) {
         MainThreadManager.Run(() =>
         {
@@ -171,6 +185,12 @@ public class OurNetworkManager : NetworkManagerBehavior
     private void _setInkLevel(float level)
     {
         FindObjectOfType<Painter>().setInkLevelPercent(level);
+    }
+
+    private void _setAttempts(int num)
+    {
+        this.Attempts = num;
+        FindObjectOfType<Painter>().setAttempts(num);
     }
 
     private void _setLevel(int levelId)
