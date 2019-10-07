@@ -33,7 +33,7 @@ public class Painter : MonoBehaviour
         this.cam = Camera.main;
         //network.SetInkLevel(1);
         this.inkMeter = GameObject.Find("InkLevel").GetComponent<Slider>();
-        this.attemptText = GameObject.Find("Text").GetComponent <Text>();
+        this.attemptText = GameObject.Find("attemptText").GetComponent <Text>();
     }
 
     // Update is called once per frame

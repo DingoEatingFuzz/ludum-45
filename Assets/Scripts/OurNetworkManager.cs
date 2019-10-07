@@ -5,6 +5,7 @@ using BeardedManStudios.Forge.Networking;
 using BeardedManStudios.Forge.Networking.Generated;
 using BeardedManStudios.Forge.Networking.Unity;
 using UnityEngine;
+using UnityEngine.UI;
 
 class PathModel {
     public List<Vector3> path;
@@ -26,6 +27,7 @@ public class OurNetworkManager : NetworkManagerBehavior
     private LevelRecord curLevel;
     private GameObject curLevelObj;
     private int Attempts = 0;
+    private Text levelText;
 
     IEnumerator Countdown()
     {
@@ -40,6 +42,7 @@ public class OurNetworkManager : NetworkManagerBehavior
     {
         Debug.Log("Starting countdown...");
         StartCoroutine(Countdown());
+        this.levelText = GameObject.Find("levelText").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -91,6 +94,7 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     public void SetLevel(int levelId)
     {
+        this.levelText.text = levelId.ToString();
         Debug.Log($"RPC SetLevel ({levelId})");
         if (this.Debugging)
         {
