@@ -209,6 +209,7 @@ public class OurNetworkManager : NetworkManagerBehavior
     {
         if (showLevelWin)
         {
+            GameObject.Find("LevelComplete").GetComponent<SpriteRenderer>().enabled = true;
             FindObjectOfType<Painter>().readOnly = true;
             GameObject oldPlayer = this.curLevelObj.transform.Find("Character").gameObject;
             oldPlayer.SetActive(true);
@@ -230,6 +231,7 @@ public class OurNetworkManager : NetworkManagerBehavior
                 Destroy(this.curLevelObj);
             }
 
+            GameObject.Find("LevelComplete").GetComponent<SpriteRenderer>().enabled = false;
             FindObjectOfType<Timer>().ResetTime();
             this.curLevel = levels.Find(x => x.id == levelId);
             Debug.Log($"Current level: id: {curLevel.id}, {curLevel.MaxInk}");
