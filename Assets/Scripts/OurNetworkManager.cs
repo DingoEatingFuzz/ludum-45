@@ -37,6 +37,12 @@ public class OurNetworkManager : NetworkManagerBehavior
         this.SetLevel(0);
     }
 
+    IEnumerator LevelWinCountdown()
+    {
+        yield return new WaitForSeconds(3.0f);
+        this.SetLevel(curLevel.id + 1);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -201,14 +207,26 @@ public class OurNetworkManager : NetworkManagerBehavior
     {
         if (this.curLevelObj != null)
         {
+            //FindObjectOfType<Painter>().readOnly = true;
+            //GameObject oldPlayer = this.curLevelObj.transform.Find("Character").gameObject;
+            //oldPlayer.SetActive(true);
+            //oldPlayer.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+
             Destroy(this.curLevelObj);
+            //StartCoroutine(LevelWinCountdown());
         }
 
+        FindObjectOfType<Timer>().ResetTime();
         this.curLevel = levels.Find(x => x.id == levelId);
         Debug.Log($"Current level: id: {curLevel.id}, {curLevel.MaxInk}");
         this.curLevelObj = Instantiate(curLevel.LevelPrefab, GameObject.Find("LevelZaddy").transform);
         this.curLevelObj.transform.Find("Character").GetComponent<PlayerController>().network = this;
-        FindObjectOfType<Painter>().maxInk = this.curLevel.MaxInk;
+        Painter p = FindObjectOfType<Painter>();
+        p.maxInk = this.curLevel.MaxInk;
+        p.readOnly = false;
+
+        GameObject player = this.curLevelObj.transform.Find("Character").gameObject;
+        player.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
         if (!Debugging)
         {
             if (!NetworkManager.Instance.IsServer)
@@ -221,9 +239,8 @@ public class OurNetworkManager : NetworkManagerBehavior
                 }
             } else
             {
-                FindObjectOfType<Painter>().readOnly = true;
+                p.readOnly = true;
             }
         }
     }
-
 }

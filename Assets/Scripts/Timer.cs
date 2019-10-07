@@ -23,7 +23,7 @@ public class Timer : MonoBehaviour
         }
     }
 
-    void ResetTime() {
+    public void ResetTime() {
         this.beginning = Time.time;
     }
 
