@@ -49,6 +49,12 @@ public class OurNetworkManager : NetworkManagerBehavior
         Debug.Log("Starting countdown...");
         StartCoroutine(Countdown());
         this.levelText = GameObject.Find("levelText").GetComponent<Text>();
+
+        // If debugging isn't explicitly on in the editor, defer to the
+        // single player flag
+        if (!this.Debugging) {
+            this.Debugging = GameManager.isSinglePlayer;
+        }
     }
 
     // Update is called once per frame
