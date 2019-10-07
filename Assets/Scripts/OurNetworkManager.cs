@@ -12,6 +12,7 @@ class PathModel {
 public class OurNetworkManager : NetworkManagerBehavior
 {
     public GameObject lineTemplate;
+    public bool Debugging = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,27 +26,30 @@ public class OurNetworkManager : NetworkManagerBehavior
     }
 
     public void ResetLevel() {
-        this.networkObject.SendRpc(RPC_RESET_LEVEL, Receivers.All);
+        if (this.Debugging) {
+            this._resetLevel();
+        } else {
+            this.networkObject.SendRpc(RPC_RESET_LEVEL, Receivers.All);
+        }
     }
 
     public void AddLine(List<Vector3> path) {
         // JSON encode path
         var model = new PathModel(){ path = path };
         var json = JsonUtility.ToJson(model);
-        Debug.Log($"Sending RPC... {json}");
+
         // send RPC
-        this.networkObject.SendRpc(RPC_SEND_PATH, Receivers.All, json);
+        if (this.Debugging) {
+            this._sendPath(json);
+        } else {
+            Debug.Log($"Sending RPC... {json}");
+            this.networkObject.SendRpc(RPC_SEND_PATH, Receivers.All, json);
+        }
     }
 
     public override void resetLevel(RpcArgs args) {
         MainThreadManager.Run(() => {
-            Debug.Log("Deleting all the things!");
-            var toDelete = GameObject.FindGameObjectsWithTag("dynamic");
-            Debug.Log($"Deleting {toDelete.Length} Objects");
-            foreach (var obj in toDelete)
-            {
-                Destroy(obj);
-            }
+            this._resetLevel();
         });
     }
 
@@ -53,13 +57,7 @@ public class OurNetworkManager : NetworkManagerBehavior
         MainThreadManager.Run(() => {
             var pathJson = args.GetNext<string>();
             Debug.Log($"Received RPC... {pathJson}");
-            var model = JsonUtility.FromJson<PathModel>(pathJson);
-
-            var line = Instantiate(this.lineTemplate, new Vector3(0, 0, 0), new Quaternion());
-            line.tag = "dynamic";
-
-            var buildPath = line.GetComponent<BuildPath>();
-            buildPath.Path = model.path;
+            this._sendPath(pathJson);
         });
     }
 
@@ -73,5 +71,25 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     public override void setInkLevel(RpcArgs args) {
 
+    }
+
+    private void _sendPath(string json) {
+        var model = JsonUtility.FromJson<PathModel>(json);
+
+        var line = Instantiate(this.lineTemplate, new Vector3(0, 0, 0), new Quaternion());
+        line.tag = "dynamic";
+
+        var buildPath = line.GetComponent<BuildPath>();
+        buildPath.Path = model.path;
+    }
+
+    private void _resetLevel() {
+        Debug.Log("Deleting all the things!");
+        var toDelete = GameObject.FindGameObjectsWithTag("dynamic");
+        Debug.Log($"Deleting {toDelete.Length} Objects");
+        foreach (var obj in toDelete)
+        {
+            Destroy(obj);
+        }
     }
 }
