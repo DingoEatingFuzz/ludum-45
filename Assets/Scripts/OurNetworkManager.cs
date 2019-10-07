@@ -104,7 +104,7 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     public void SetLevel(int levelId, bool showLevelWin)
     {
-        this.levelText.text = (levelId+1).ToString();
+        //this.levelText.text = (levelId+1).ToString();
         Debug.Log($"RPC SetLevel ({levelId})");
         if (this.Debugging)
         {
@@ -194,7 +194,11 @@ public class OurNetworkManager : NetworkManagerBehavior
             Destroy(obj);
         }
 
-        FindObjectOfType<PlayerController>().ResetPlayerPosition();
+        var player = FindObjectOfType<PlayerController>();
+        if (player != null)
+        {
+            player.ResetPlayerPosition();
+        }
     }
 
     private void _setInkLevel(float level)
@@ -210,7 +214,7 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     private void _setLevel(int levelId, bool showLevelWin)
     {
-        if (showLevelWin)
+        if (false && showLevelWin)
         {
             GameObject.Find("LevelComplete").GetComponent<SpriteRenderer>().enabled = true;
             FindObjectOfType<Painter>().readOnly = true;
@@ -218,10 +222,8 @@ public class OurNetworkManager : NetworkManagerBehavior
             oldPlayer.SetActive(true);
             oldPlayer.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
-            //var walls = GameObject.FindGameObjectsWithTag("wall");
             foreach (var wall in this.walls)
             {
-                Debug.Log("I hit the wall and I liked it");
                 wall.SetActive(true);
             }
 
@@ -237,6 +239,7 @@ public class OurNetworkManager : NetworkManagerBehavior
             GameObject.Find("LevelComplete").GetComponent<SpriteRenderer>().enabled = false;
             FindObjectOfType<Timer>().ResetTime();
             this.curLevel = levels.Find(x => x.id == levelId);
+            this.levelText.text = this.curLevel.id.ToString();
             Debug.Log($"Current level: id: {curLevel.id}, {curLevel.MaxInk}");
             this.curLevelObj = Instantiate(curLevel.LevelPrefab, GameObject.Find("LevelZaddy").transform);
             this.curLevelObj.transform.Find("Character").GetComponent<PlayerController>().network = this;
