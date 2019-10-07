@@ -19,6 +19,8 @@ public class Painter : MonoBehaviour
     private Camera cam;
     private int lineCount = 0;
     public Text textUI;
+    public Slider inkMeter;
+    private float fullInkWidth;
 
     // Start is called before the first frame update
 
@@ -27,12 +29,15 @@ public class Painter : MonoBehaviour
         this.lineRenderer = this.GetComponent<LineRenderer>();
         this.cam = Camera.main;
         inkLevel = maxInk;
+        this.inkMeter = GameObject.Find("InkLevel").GetComponent<Slider>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        textUI.text = inkLevel <= 0 ? "0" : Math.Round(inkLevel, 2).ToString();
+        // textUI.text = inkLevel <= 0 ? "0" : Math.Round(inkLevel, 2).ToString();
+        this.inkMeter.maxValue = this.maxInk;
+        this.inkMeter.value = this.inkLevel;
 
         if (Input.GetMouseButtonDown(0)) {
             this.isDragging = true;
@@ -59,8 +64,8 @@ public class Painter : MonoBehaviour
             inkLevel = maxInk;
             network.ResetLevel();
         }
-        
-        
+
+
         if (this.isDragging && this.inkLevel >= 0) {
             this.Drag();
         }
