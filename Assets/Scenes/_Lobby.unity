@@ -280,7 +280,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &441894099
 RectTransform:
   m_ObjectHideFlags: 0
@@ -512,7 +512,7 @@ GameObject:
   - component: {fileID: 661161029}
   - component: {fileID: 661161028}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Instructions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -534,8 +534,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 510.69995, y: 178.70007}
-  m_SizeDelta: {x: 819.8, y: 615.9}
+  m_AnchoredPosition: {x: 513, y: 178.70007}
+  m_SizeDelta: {x: 777.8, y: 615.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &661161028
 MonoBehaviour:
@@ -568,10 +568,20 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Each level presents the Player (host) and the Artist (client) with a unique
-    challenge that can be overcome by teamwork, good communication, and a bit of patience.\n\n*The
-    Player controlls the block by pressing [A] and [D] on the keyboard.\n\n*The Artist
-    draws lines using [Left Click] on the \n\n"
+  m_Text: 'The Player (host) controls their block with [A] and [D]
+
+
+    The Artist draws lines with [Left Click] on the mouse, creating ramps and pathways
+    for the player to traverse. If they''re unhappy with their work, they can press
+    [Space Bar] to clear their canvas and try again.
+
+
+    The Artist cannot see the Player or the obsticales on the level. Instead, the
+    Player must describe what the Artist needs to draw to allow them to reach the
+    exit portal.
+
+
+'
 --- !u!222 &661161029
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -747,13 +757,14 @@ GameObject:
   - component: {fileID: 949486535}
   - component: {fileID: 949486534}
   - component: {fileID: 949486537}
+  - component: {fileID: 949486538}
   m_Layer: 5
   m_Name: Back Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &949486533
 RectTransform:
   m_ObjectHideFlags: 0
@@ -829,6 +840,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
+      - m_Target: {fileID: 949486538}
+        m_MethodName: StopMusic
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &949486535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,6 +897,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce6427c568ddeff45958acfb3bb5e344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &949486538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949486532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dff2d7f294947824f94aec9028f49d1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &952854108
