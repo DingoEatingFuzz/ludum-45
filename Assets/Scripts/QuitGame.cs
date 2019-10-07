@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class QuitGame : MonoBehaviour
 {
-    void doExitGame()
+    public OurNetworkManager network;
+
+    public void doExitGame()
     {
+        Debug.Log("Quit");
         Application.Quit();
+    }
+
+    public void resetGame()
+    {
+        network.ResetLevel();
     }
 }
