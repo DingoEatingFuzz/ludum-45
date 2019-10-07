@@ -187,7 +187,7 @@ public class OurNetworkManager : NetworkManagerBehavior
         FindObjectOfType<Painter>().maxInk = this.curLevel.MaxInk;
         if (!Debugging)
         {
-            if (NetworkManager.Instance.IsServer)
+            if (!NetworkManager.Instance.IsServer)
             {
                 this.curLevelObj.transform.Find("Character").gameObject.SetActive(false);
                 var walls = GameObject.FindGameObjectsWithTag("wall");
