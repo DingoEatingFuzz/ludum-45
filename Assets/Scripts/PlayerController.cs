@@ -41,7 +41,35 @@ public class PlayerController : MonoBehaviour
         if (collision.name == "Exit")
         {
             ResetPlayer();
-            //Do Scene Change
+            network.NextLevel();
+            //Destroy();
+            //Do Prefab (or level) change
+            //PHASE 1: 
+            //  a -1. Load 1st level
+            //  a. Remove existing level
+            //  b. Look up next level in level dick t
+            //  c. load next level
+            //PHASE 1 aceptance criteria:
+            //  1. controls and ink still work in next level
+
+            //PHASE 2:
+            //  a. set next level in network
+            //PHASE 2 acceptance criteria
+            //   1. e2e test w.=server and client
+
+            //PHASE 3:
+            //  a. interstitial you did it graphic
+            //  b. uhhhhh timer for 6 seconds
+            // PHASE 3 acceptanceCriteria
+            //  1. e2e test synchronized transitions
+
+            //PHASE 4:
+            //  a. interstitial includes screenshot of victor screen
+            //  b. that's it
+            //PHASE 4 acceptance criteria
+            //  1. e2e test of victor
+       
+
         }
         if (collision.name == "DeathBox")
         {
@@ -51,8 +79,12 @@ public class PlayerController : MonoBehaviour
 
     private void ResetPlayer()
     {
+        network.ResetLevel();
+    }
+
+    public void ResetPlayerPosition()
+    {
         rb.velocity = new Vector2(0, 0);
         gameObject.transform.position = originalPos;
-        network.ResetLevel();
     }
 }
