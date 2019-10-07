@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Music
+  - wall
+  - fluid
+  - dynamic
   layers:
   - Default
   - TransparentFX
