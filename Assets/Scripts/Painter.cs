@@ -1,10 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(LineRenderer))]
 public class Painter : MonoBehaviour
 {
+    public float maxInk = 10f;
+    private float inkLevel;
     public float threshold = 0.001f;
     public GameObject template;
     public OurNetworkManager network;
@@ -13,17 +18,22 @@ public class Painter : MonoBehaviour
     private LineRenderer lineRenderer;
     private Camera cam;
     private int lineCount = 0;
+    public Text textUI;
+
     // Start is called before the first frame update
 
     void Awake()
     {
         this.lineRenderer = this.GetComponent<LineRenderer>();
         this.cam = Camera.main;
+        inkLevel = maxInk;
     }
 
     // Update is called once per frame
     void Update()
     {
+        textUI.text = inkLevel <= 0 ? "0" : Math.Round(inkLevel, 2).ToString();
+
         if (Input.GetMouseButtonDown(0)) {
             this.isDragging = true;
             this.lineBuffer = new List<Vector3>();
@@ -39,10 +49,19 @@ public class Painter : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
+            Debug.Log("Deleting all the things!");
+            var toDelete = GameObject.FindGameObjectsWithTag("dynamic");
+            Debug.Log($"Deleting {toDelete.Length} Objects");
+            foreach (var obj in toDelete)
+            {
+                Destroy(obj);
+            }
+            inkLevel = maxInk;
             network.ResetLevel();
         }
-
-        if (this.isDragging) {
+        
+        
+        if (this.isDragging && this.inkLevel >= 0) {
             this.Drag();
         }
     }
@@ -65,6 +84,11 @@ public class Painter : MonoBehaviour
         lineRenderer.positionCount = lineBuffer.Count;
         for (int i = this.lineCount; i < lineBuffer.Count; i++) {
             lineRenderer.SetPosition(i, lineBuffer[i]);
+            if (this.lineCount > 1)
+            {
+                this.inkLevel -= (lineBuffer[i]-lineBuffer[i-1]).magnitude;
+            }
+
         }
         lineCount = lineBuffer.Count;
     }

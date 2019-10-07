@@ -50,3 +50,5 @@ crashlytics-build.properties
 # Github Plugin
 [Aa]ssets/Plugins
 [Aa]ssets/Plugins.meta
+
+.idea
