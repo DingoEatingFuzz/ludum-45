@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 10f;
+    public OurNetworkManager network;
     private Rigidbody2D rb;
     private Vector2 originalPos;
 
@@ -52,5 +53,6 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(0, 0);
         gameObject.transform.position = originalPos;
+        network.ResetLevel();
     }
 }

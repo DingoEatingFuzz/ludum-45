@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class Painter : MonoBehaviour
 {
     public float maxInk = 10f;
-    private float inkLevel;
+    public float inkLevel;
     public float threshold = 0.001f;
     public GameObject template;
     public OurNetworkManager network;
@@ -28,7 +28,7 @@ public class Painter : MonoBehaviour
     {
         this.lineRenderer = this.GetComponent<LineRenderer>();
         this.cam = Camera.main;
-        inkLevel = maxInk;
+        network.SetInkLevel(1);
         this.inkMeter = GameObject.Find("InkLevel").GetComponent<Slider>();
     }
 
@@ -61,7 +61,6 @@ public class Painter : MonoBehaviour
             {
                 Destroy(obj);
             }
-            inkLevel = maxInk;
             network.ResetLevel();
         }
 
@@ -91,7 +90,7 @@ public class Painter : MonoBehaviour
             lineRenderer.SetPosition(i, lineBuffer[i]);
             if (this.lineCount > 1)
             {
-                this.inkLevel -= (lineBuffer[i]-lineBuffer[i-1]).magnitude;
+                network.SetInkLevel((inkLevel - (lineBuffer[i]-lineBuffer[i-1]).magnitude) / maxInk);
             }
 
         }
@@ -100,5 +99,10 @@ public class Painter : MonoBehaviour
 
     void AddLine() {
         this.network.AddLine(this.lineBuffer);
+    }
+
+    public void setInkLevelPercent(float pct)
+    {
+        inkLevel = maxInk * pct;
     }
 }

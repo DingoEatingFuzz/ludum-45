@@ -28,8 +28,10 @@ public class OurNetworkManager : NetworkManagerBehavior
     public void ResetLevel() {
         if (this.Debugging) {
             this._resetLevel();
+            this._setInkLevel(1);
         } else {
             this.networkObject.SendRpc(RPC_RESET_LEVEL, Receivers.All);
+            this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, 1);
         }
     }
 
@@ -45,6 +47,18 @@ public class OurNetworkManager : NetworkManagerBehavior
             Debug.Log($"Sending RPC... {json}");
             this.networkObject.SendRpc(RPC_SEND_PATH, Receivers.All, json);
         }
+    }
+
+    public void SetInkLevel(float level)
+    {
+        if (this.Debugging)
+        {
+            this._setInkLevel(level);
+        } else
+        {
+            this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, level);
+        }
+
     }
 
     public override void resetLevel(RpcArgs args) {
@@ -70,6 +84,11 @@ public class OurNetworkManager : NetworkManagerBehavior
     }
 
     public override void setInkLevel(RpcArgs args) {
+        MainThreadManager.Run(() =>
+        {
+            var level = args.GetNext<float>();
+            this._setInkLevel(level);
+        });
 
     }
 
@@ -91,5 +110,10 @@ public class OurNetworkManager : NetworkManagerBehavior
         {
             Destroy(obj);
         }
+    }
+
+    private void _setInkLevel(float level)
+    {
+        FindObjectOfType<Painter>().setInkLevelPercent(level);
     }
 }
