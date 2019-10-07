@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 875.7, y: 126.4}
-  m_SizeDelta: {x: 42.252, y: 72.53}
+  m_AnchoredPosition: {x: 873.38, y: 117.89}
+  m_SizeDelta: {x: 141.14, y: 55.51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6480922448884590168
 CanvasRenderer:
@@ -64,13 +64,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 7e03d627ccff6de459cfd4fff48a6b98, type: 3}
     m_FontSize: 12
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 191
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -977,8 +977,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 804.79, y: -265.3}
-  m_SizeDelta: {x: 67.813, y: 91.11}
+  m_AnchoredPosition: {x: 793.38, y: -297.7}
+  m_SizeDelta: {x: 303.6, y: 140.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2950278701086126745
 CanvasRenderer:
@@ -1007,19 +1007,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 7e03d627ccff6de459cfd4fff48a6b98, type: 3}
     m_FontSize: 185
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 191
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0
+  m_Text: 1520
 --- !u!1 &5879749213763504845
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,7 +1032,7 @@ GameObject:
   - component: {fileID: 4555675009633513600}
   - component: {fileID: 2913963408398973742}
   m_Layer: 5
-  m_Name: timeText
+  m_Name: TimeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1054,8 +1054,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 741.59, y: 132}
-  m_SizeDelta: {x: 191.3, y: 47.2}
+  m_AnchoredPosition: {x: 713.9, y: 120.07}
+  m_SizeDelta: {x: 144.67, y: 59.87}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4555675009633513600
 CanvasRenderer:
@@ -1084,13 +1084,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 7e03d627ccff6de459cfd4fff48a6b98, type: 3}
     m_FontSize: 12
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 191
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
