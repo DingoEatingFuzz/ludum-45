@@ -28,19 +28,20 @@ public class OurNetworkManager : NetworkManagerBehavior
     private GameObject curLevelObj;
     private int Attempts = 0;
     private Text levelText;
+    private GameObject[] walls;
 
     IEnumerator Countdown()
     {
         Debug.Log("Countdown started...");
         yield return new WaitForSeconds(0.5f);
         Debug.Log("Setting level...");
-        this.SetLevel(0);
+        this.SetLevel(0, false);
     }
 
     IEnumerator LevelWinCountdown()
     {
         yield return new WaitForSeconds(3.0f);
-        this.SetLevel(curLevel.id + 1);
+        this.SetLevel(curLevel.id + 1, false);
     }
 
     // Start is called before the first frame update
@@ -98,18 +99,18 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     }
 
-    public void SetLevel(int levelId)
+    public void SetLevel(int levelId, bool showLevelWin)
     {
         this.levelText.text = (levelId+1).ToString();
         Debug.Log($"RPC SetLevel ({levelId})");
         if (this.Debugging)
         {
-            this._setLevel(levelId);
+            this._setLevel(levelId, showLevelWin);
             this._setInkLevel(1);
             this._setAttempts(0);
         } else
         {
-            this.networkObject.SendRpc(RPC_SET_LEVEL, Receivers.All, levelId);
+            this.networkObject.SendRpc(RPC_SET_LEVEL, Receivers.All, levelId, showLevelWin);
             this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, 1.0f);
             this.networkObject.SendRpc(RPC_SET_ATTEMPTS, Receivers.All, 0);
         }
@@ -119,7 +120,7 @@ public class OurNetworkManager : NetworkManagerBehavior
     {
         if (curLevel != null)
         {
-            this.SetLevel(curLevel.id + 1);
+            this.SetLevel(curLevel.id + 1, true);
         }
     }
 
@@ -148,7 +149,8 @@ public class OurNetworkManager : NetworkManagerBehavior
         {
             Debug.Log("Are we ever here?????????");
             var levelId = args.GetNext<int>();
-            this._setLevel(levelId);
+            var showLevelWin = args.GetNext<bool>();
+            this._setLevel(levelId, showLevelWin);
         });
     }
 
@@ -203,43 +205,56 @@ public class OurNetworkManager : NetworkManagerBehavior
         FindObjectOfType<Painter>().setAttempts(num);
     }
 
-    private void _setLevel(int levelId)
+    private void _setLevel(int levelId, bool showLevelWin)
     {
-        if (this.curLevelObj != null)
+        if (showLevelWin)
         {
-            //FindObjectOfType<Painter>().readOnly = true;
-            //GameObject oldPlayer = this.curLevelObj.transform.Find("Character").gameObject;
-            //oldPlayer.SetActive(true);
-            //oldPlayer.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+            FindObjectOfType<Painter>().readOnly = true;
+            GameObject oldPlayer = this.curLevelObj.transform.Find("Character").gameObject;
+            oldPlayer.SetActive(true);
+            oldPlayer.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
-            Destroy(this.curLevelObj);
-            //StartCoroutine(LevelWinCountdown());
-        }
-
-        FindObjectOfType<Timer>().ResetTime();
-        this.curLevel = levels.Find(x => x.id == levelId);
-        Debug.Log($"Current level: id: {curLevel.id}, {curLevel.MaxInk}");
-        this.curLevelObj = Instantiate(curLevel.LevelPrefab, GameObject.Find("LevelZaddy").transform);
-        this.curLevelObj.transform.Find("Character").GetComponent<PlayerController>().network = this;
-        Painter p = FindObjectOfType<Painter>();
-        p.maxInk = this.curLevel.MaxInk;
-        p.readOnly = false;
-
-        GameObject player = this.curLevelObj.transform.Find("Character").gameObject;
-        player.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-        if (!Debugging)
-        {
-            if (!NetworkManager.Instance.IsServer)
+            //var walls = GameObject.FindGameObjectsWithTag("wall");
+            foreach (var wall in this.walls)
             {
-                this.curLevelObj.transform.Find("Character").gameObject.SetActive(false);
-                var walls = GameObject.FindGameObjectsWithTag("wall");
-                foreach (var wall in walls)
+                Debug.Log("I hit the wall and I liked it");
+                wall.SetActive(true);
+            }
+
+            StartCoroutine(LevelWinCountdown());
+        } else
+        {
+            if (this.curLevelObj != null)
+            {
+
+                Destroy(this.curLevelObj);
+            }
+
+            FindObjectOfType<Timer>().ResetTime();
+            this.curLevel = levels.Find(x => x.id == levelId);
+            Debug.Log($"Current level: id: {curLevel.id}, {curLevel.MaxInk}");
+            this.curLevelObj = Instantiate(curLevel.LevelPrefab, GameObject.Find("LevelZaddy").transform);
+            this.curLevelObj.transform.Find("Character").GetComponent<PlayerController>().network = this;
+            Painter p = FindObjectOfType<Painter>();
+            p.maxInk = this.curLevel.MaxInk;
+            p.readOnly = false;
+
+            GameObject player = this.curLevelObj.transform.Find("Character").gameObject;
+            player.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+            this.walls = GameObject.FindGameObjectsWithTag("wall");
+            if (!Debugging)
+            {
+                if (!NetworkManager.Instance.IsServer)
                 {
-                    wall.SetActive(false);
+                    this.curLevelObj.transform.Find("Character").gameObject.SetActive(false);
+                    foreach (var wall in this.walls)
+                    {
+                        wall.SetActive(false);
+                    }
+                } else
+                {
+                    p.readOnly = true;
                 }
-            } else
-            {
-                p.readOnly = true;
             }
         }
     }
