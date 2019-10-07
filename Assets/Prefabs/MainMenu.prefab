@@ -586,6 +586,7 @@ GameObject:
   - component: {fileID: 5000321404145970680}
   - component: {fileID: 5000321404145970682}
   - component: {fileID: 5000321404145970683}
+  - component: {fileID: 1105491036278474797}
   m_Layer: 5
   m_Name: background
   m_TagString: Untagged
@@ -648,6 +649,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &1105491036278474797
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5000321404145970681}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &5000321405580731187
 GameObject:
   m_ObjectHideFlags: 0
