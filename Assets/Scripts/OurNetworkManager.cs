@@ -94,7 +94,7 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     public void SetLevel(int levelId)
     {
-        this.levelText.text = levelId.ToString();
+        this.levelText.text = (levelId+1).ToString();
         Debug.Log($"RPC SetLevel ({levelId})");
         if (this.Debugging)
         {
