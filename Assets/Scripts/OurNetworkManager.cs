@@ -32,9 +32,7 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     IEnumerator Countdown()
     {
-        Debug.Log("Countdown started...");
         yield return new WaitForSeconds(0.5f);
-        Debug.Log("Setting level...");
         this.SetLevel(0, false);
     }
 
@@ -47,9 +45,14 @@ public class OurNetworkManager : NetworkManagerBehavior
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Starting countdown...");
         StartCoroutine(Countdown());
         this.levelText = GameObject.Find("levelText").GetComponent<Text>();
+
+        // If debugging isn't explicitly on in the editor, defer to the
+        // single player flag
+        if (!this.Debugging) {
+            this.Debugging = GameManager.isSinglePlayer;
+        }
     }
 
     // Update is called once per frame
