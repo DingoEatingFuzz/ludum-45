@@ -26,10 +26,19 @@ public class OurNetworkManager : NetworkManagerBehavior
     private LevelRecord curLevel;
     private GameObject curLevelObj; 
 
+    IEnumerator Countdown()
+    {
+        Debug.Log("Countdown started...");
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("Setting level...");
+        this.SetLevel(0);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        this.SetLevel(0);
+        Debug.Log("Starting countdown...");
+        StartCoroutine(Countdown());
     }
 
     // Update is called once per frame
@@ -39,16 +48,18 @@ public class OurNetworkManager : NetworkManagerBehavior
     }
 
     public void ResetLevel() {
+        Debug.Log("RPC ResetLevel");
         if (this.Debugging) {
             this._resetLevel();
             this._setInkLevel(1);
         } else {
             this.networkObject.SendRpc(RPC_RESET_LEVEL, Receivers.All);
-            this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, 1);
+            this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, 1.0f);
         }
     }
 
     public void AddLine(List<Vector3> path) {
+        Debug.Log("RPC AddLine");
         // JSON encode path
         var model = new PathModel(){ path = path };
         var json = JsonUtility.ToJson(model);
@@ -64,6 +75,7 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     public void SetInkLevel(float level)
     {
+        Debug.Log("RPC SetInkLevel");
         if (this.Debugging)
         {
             this._setInkLevel(level);
@@ -76,12 +88,15 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     public void SetLevel(int levelId)
     {
+        Debug.Log($"RPC SetLevel ({levelId})");
         if (this.Debugging)
         {
             this._setLevel(levelId);
+            this._setInkLevel(1);
         } else
         {
             this.networkObject.SendRpc(RPC_SET_LEVEL, Receivers.All, levelId);
+            this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, 1.0f);
         }
     }
 
@@ -112,8 +127,11 @@ public class OurNetworkManager : NetworkManagerBehavior
     }
 
     public override void setLevel(RpcArgs args) {
+        Debug.Log("Outside main thread, in the setLevel");
+
         MainThreadManager.Run(() =>
         {
+            Debug.Log("Are we ever here?????????");
             var levelId = args.GetNext<int>();
             this._setLevel(levelId);
         });
@@ -163,8 +181,25 @@ public class OurNetworkManager : NetworkManagerBehavior
         }
 
         this.curLevel = levels.Find(x => x.id == levelId);
+        Debug.Log($"Current level: id: {curLevel.id}, {curLevel.MaxInk}");
         this.curLevelObj = Instantiate(curLevel.LevelPrefab, GameObject.Find("LevelZaddy").transform);
         this.curLevelObj.transform.Find("Character").GetComponent<PlayerController>().network = this;
+        FindObjectOfType<Painter>().maxInk = this.curLevel.MaxInk;
+        if (!Debugging)
+        {
+            if (NetworkManager.Instance.IsServer)
+            {
+                this.curLevelObj.transform.Find("Character").gameObject.SetActive(false);
+                var walls = GameObject.FindGameObjectsWithTag("wall");
+                foreach (var wall in walls)
+                {
+                    wall.SetActive(false);
+                }
+            } else
+            {
+                FindObjectOfType<Painter>().readOnly = true;
+            }
+        }
     }
 
 }

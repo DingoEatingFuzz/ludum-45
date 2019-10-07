@@ -158,6 +158,7 @@ MonoBehaviour:
   network: {fileID: 1463156830}
   textUI: {fileID: 0}
   inkMeter: {fileID: 0}
+  readOnly: 0
 --- !u!120 &412966145
 LineRenderer:
   m_ObjectHideFlags: 0

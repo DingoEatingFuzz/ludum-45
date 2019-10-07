@@ -21,6 +21,8 @@ public class Painter : MonoBehaviour
     public Text textUI;
     public Slider inkMeter;
     private float fullInkWidth;
+    public bool readOnly;
+    private float lineAmount;
 
     // Start is called before the first frame update
 
@@ -28,7 +30,7 @@ public class Painter : MonoBehaviour
     {
         this.lineRenderer = this.GetComponent<LineRenderer>();
         this.cam = Camera.main;
-        network.SetInkLevel(1);
+        //network.SetInkLevel(1);
         this.inkMeter = GameObject.Find("InkLevel").GetComponent<Slider>();
     }
 
@@ -37,20 +39,23 @@ public class Painter : MonoBehaviour
     {
         // textUI.text = inkLevel <= 0 ? "0" : Math.Round(inkLevel, 2).ToString();
         this.inkMeter.maxValue = this.maxInk;
-        this.inkMeter.value = this.inkLevel;
+        this.inkMeter.value = this.inkLevel - this.lineAmount;
 
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0) && !readOnly) {
             this.isDragging = true;
             this.lineBuffer = new List<Vector3>();
             this.lineCount = 0;
+            this.lineAmount = 0;
         }
-        if (Input.GetMouseButtonUp(0)) {
+        if (Input.GetMouseButtonUp(0) && !readOnly) {
             this.isDragging = false;
             // Add the element to the screen
             if (this.lineBuffer.Count > 2) this.AddLine();
             this.lineBuffer = new List<Vector3>();
             this.lineCount = 0;
             this.lineRenderer.positionCount = 0;
+            network.SetInkLevel((this.inkLevel - this.lineAmount) / this.maxInk);
+            this.lineAmount = 0;
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
@@ -58,7 +63,7 @@ public class Painter : MonoBehaviour
         }
 
 
-        if (this.isDragging && this.inkLevel > 0) {
+        if (this.isDragging && this.inkLevel > 0 && this.inkLevel - this.lineAmount > 0) {
             this.Drag();
         }
     }
@@ -91,7 +96,7 @@ public class Painter : MonoBehaviour
             lineRenderer.SetPosition(i, lineBuffer[i]);
             if (this.lineCount > 1)
             {
-                network.SetInkLevel((inkLevel - (lineBuffer[i] - lineBuffer[i - 1]).magnitude) / maxInk);
+                lineAmount += ((lineBuffer[i] - lineBuffer[i - 1]).magnitude) ;
             }
 
         }
