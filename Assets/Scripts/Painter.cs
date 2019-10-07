@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 public class Painter : MonoBehaviour
 {
     public float maxInk = 10f;
+    private float inkLevel;
     public float threshold = 0.001f;
     public GameObject template;
     public OurNetworkManager network;
@@ -24,12 +26,13 @@ public class Painter : MonoBehaviour
     {
         this.lineRenderer = this.GetComponent<LineRenderer>();
         this.cam = Camera.main;
+        inkLevel = maxInk;
     }
 
     // Update is called once per frame
     void Update()
     {
-        textUI.text = maxInk <= 0 ? "0" : Math.Round(maxInk, 2).ToString();
+        textUI.text = inkLevel <= 0 ? "0" : Math.Round(inkLevel, 2).ToString();
 
         if (Input.GetMouseButtonDown(0)) {
             this.isDragging = true;
@@ -53,13 +56,12 @@ public class Painter : MonoBehaviour
             {
                 Destroy(obj);
             }
+            inkLevel = maxInk;
             network.ResetLevel();
         }
-
-    
         
         
-        if (this.isDragging && this.maxInk >= 0) {
+        if (this.isDragging && this.inkLevel >= 0) {
             this.Drag();
         }
     }
@@ -84,7 +86,7 @@ public class Painter : MonoBehaviour
             lineRenderer.SetPosition(i, lineBuffer[i]);
             if (this.lineCount > 1)
             {
-                this.maxInk -= (lineBuffer[i]-lineBuffer[i-1]).magnitude;
+                this.inkLevel -= (lineBuffer[i]-lineBuffer[i-1]).magnitude;
             }
 
         }
