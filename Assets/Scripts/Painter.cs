@@ -68,8 +68,9 @@ public class Painter : MonoBehaviour
         mousePos.z = cam.nearClipPlane;
         var mouseWorld = cam.ScreenToWorldPoint(mousePos);
         mouseWorld.z = -1;
-
-        if (lineBuffer.Count == 0 || Vector2.Distance(mouseWorld, lineBuffer[lineBuffer.Count - 1]) > this.threshold) {
+        
+        if (lineBuffer.Count == 0 || Vector2.Distance(mouseWorld, lineBuffer[lineBuffer.Count - 1]) > this.threshold 
+            && inkLevel - (lineBuffer[lineBuffer.Count - 1] - mouseWorld).magnitude > 0) {
             lineBuffer.Add(mouseWorld);
             this.UpdateLine();
         }
@@ -83,7 +84,7 @@ public class Painter : MonoBehaviour
             lineRenderer.SetPosition(i, lineBuffer[i]);
             if (this.lineCount > 1)
             {
-                network.SetInkLevel((inkLevel - (lineBuffer[i]-lineBuffer[i-1]).magnitude) / maxInk);
+                network.SetInkLevel((inkLevel - (lineBuffer[i] - lineBuffer[i - 1]).magnitude) / maxInk);
             }
 
         }
