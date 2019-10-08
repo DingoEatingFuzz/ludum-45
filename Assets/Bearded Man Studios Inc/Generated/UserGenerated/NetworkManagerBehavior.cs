@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"string\"][][\"byte[]\"][\"int\", \"bool\"][\"float\"][\"int\"]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"data\"][][\"bitmap\"][\"id\", \"showLevelWin\"][\"amount\"][\"num\"]]")]
+	[GeneratedRPC("{\"types\":[[\"string\"][][][\"int\"][\"float\"][\"int\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"data\"][][][\"id\"][\"amount\"][\"num\"]]")]
 	public abstract partial class NetworkManagerBehavior : NetworkBehavior
 	{
 		public const byte RPC_SEND_PATH = 0 + 5;
@@ -29,8 +29,8 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			base.SetupHelperRpcs(networkObject);
 			networkObject.RegisterRpc("sendPath", sendPath, typeof(string));
 			networkObject.RegisterRpc("resetLevel", resetLevel);
-			networkObject.RegisterRpc("victory", victory, typeof(byte[]));
-			networkObject.RegisterRpc("setLevel", setLevel, typeof(int), typeof(bool));
+			networkObject.RegisterRpc("victory", victory);
+			networkObject.RegisterRpc("setLevel", setLevel, typeof(int));
 			networkObject.RegisterRpc("setInkLevel", setInkLevel, typeof(float));
 			networkObject.RegisterRpc("setAttempts", setAttempts, typeof(int));
 
