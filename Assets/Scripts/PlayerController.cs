@@ -33,32 +33,14 @@ public class PlayerController : MonoBehaviour
             Vector2 dom = new Vector2(horiMov, 0);
             rb.AddForce(dom);
         }
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.name == "Exit")
         {
-            ResetPlayer();
-            network.NextLevel();
-            //Destroy();
-            //Do Prefab (or level) change
-
-
-            //PHASE 3:
-            //  a. interstitial you did it graphic
-            //  b. uhhhhh timer for 6 seconds
-            // PHASE 3 acceptanceCriteria
-            //  1. e2e test synchronized transitions
-
-            //PHASE 4:
-            //  a. interstitial includes screenshot of victor screen
-            //  b. that's it
-            //PHASE 4 acceptance criteria
-            //  1. e2e test of victor
-       
-
+            network.Victory();
         }
         if (collision.name == "DeathBox")
         {
