@@ -33,13 +33,13 @@ public class OurNetworkManager : NetworkManagerBehavior
     IEnumerator Countdown()
     {
         yield return new WaitForSeconds(0.5f);
-        this.SetLevel(1, false);
+        this.SetLevel(1);
     }
 
     IEnumerator LevelWinCountdown()
     {
         yield return new WaitForSeconds(3.0f);
-        this.SetLevel(curLevel.id + 1, false);
+        this.NextLevel();
     }
 
     // Start is called before the first frame update
@@ -102,18 +102,19 @@ public class OurNetworkManager : NetworkManagerBehavior
 
     }
 
-    public void SetLevel(int levelId, bool showLevelWin)
+    public void SetLevel(int levelId)
     {
-        //this.levelText.text = (levelId+1).ToString();
         Debug.Log($"RPC SetLevel ({levelId})");
         if (this.Debugging)
         {
-            this._setLevel(levelId, showLevelWin);
+            this._resetLevel();
+            this._setLevel(levelId);
             this._setInkLevel(1);
             this._setAttempts(0);
         } else
         {
-            this.networkObject.SendRpc(RPC_SET_LEVEL, Receivers.All, levelId, showLevelWin);
+            this.networkObject.SendRpc(RPC_RESET_LEVEL, Receivers.All);
+            this.networkObject.SendRpc(RPC_SET_LEVEL, Receivers.All, levelId);
             this.networkObject.SendRpc(RPC_SET_INK_LEVEL, Receivers.All, 1.0f);
             this.networkObject.SendRpc(RPC_SET_ATTEMPTS, Receivers.All, 0);
         }
@@ -123,8 +124,17 @@ public class OurNetworkManager : NetworkManagerBehavior
     {
         if (curLevel != null)
         {
-            this.SetLevel(curLevel.id + 1, true);
+            this.SetLevel(curLevel.id + 1);
         }
+    }
+
+    public void Victory() {
+        if (this.Debugging) {
+            this._victory();
+        } else {
+            this.networkObject.SendRpc(RPC_VICTORY, Receivers.All);
+        }
+        StartCoroutine(LevelWinCountdown());
     }
 
     public override void resetLevel(RpcArgs args) {
@@ -142,18 +152,16 @@ public class OurNetworkManager : NetworkManagerBehavior
     }
 
     public override void victory(RpcArgs args) {
-
+        MainThreadManager.Run(() => {
+            this._victory();
+        });
     }
 
     public override void setLevel(RpcArgs args) {
-        Debug.Log("Outside main thread, in the setLevel");
-
         MainThreadManager.Run(() =>
         {
-            Debug.Log("Are we ever here?????????");
             var levelId = args.GetNext<int>();
-            var showLevelWin = args.GetNext<bool>();
-            this._setLevel(levelId, showLevelWin);
+            this._setLevel(levelId);
         });
     }
 
@@ -212,58 +220,58 @@ public class OurNetworkManager : NetworkManagerBehavior
         FindObjectOfType<Painter>().setAttempts(num);
     }
 
-    private void _setLevel(int levelId, bool showLevelWin)
+    private void _setLevel(int levelId)
     {
-        if (false && showLevelWin)
+        if (this.curLevelObj != null)
         {
-            GameObject.Find("LevelComplete").GetComponent<SpriteRenderer>().enabled = true;
-            FindObjectOfType<Painter>().readOnly = true;
-            GameObject oldPlayer = this.curLevelObj.transform.Find("Character").gameObject;
-            oldPlayer.SetActive(true);
-            oldPlayer.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
-            foreach (var wall in this.walls)
-            {
-                wall.SetActive(true);
-            }
+            Destroy(this.curLevelObj);
+        }
 
-            StartCoroutine(LevelWinCountdown());
-        } else
+        GameObject.Find("LevelComplete").GetComponent<SpriteRenderer>().enabled = false;
+        FindObjectOfType<Timer>().ResetTime();
+
+        this.curLevel = levels.Find(x => x.id == levelId);
+        this.levelText.text = this.curLevel.id.ToString();
+        Debug.Log($"Current level: id: {curLevel.id}, {curLevel.MaxInk}");
+
+        this.curLevelObj = Instantiate(curLevel.LevelPrefab, GameObject.Find("LevelZaddy").transform);
+        this.curLevelObj.transform.Find("Character").GetComponent<PlayerController>().network = this;
+
+        Painter p = FindObjectOfType<Painter>();
+        p.maxInk = this.curLevel.MaxInk;
+        p.readOnly = false;
+
+        GameObject player = this.curLevelObj.transform.Find("Character").gameObject;
+        player.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+        var walls = GameObject.FindGameObjectsWithTag("wall");
+        if (!Debugging)
         {
-            if (this.curLevelObj != null)
+            if (!NetworkManager.Instance.IsServer)
             {
-
-                Destroy(this.curLevelObj);
-            }
-
-            GameObject.Find("LevelComplete").GetComponent<SpriteRenderer>().enabled = false;
-            FindObjectOfType<Timer>().ResetTime();
-            this.curLevel = levels.Find(x => x.id == levelId);
-            this.levelText.text = this.curLevel.id.ToString();
-            Debug.Log($"Current level: id: {curLevel.id}, {curLevel.MaxInk}");
-            this.curLevelObj = Instantiate(curLevel.LevelPrefab, GameObject.Find("LevelZaddy").transform);
-            this.curLevelObj.transform.Find("Character").GetComponent<PlayerController>().network = this;
-            Painter p = FindObjectOfType<Painter>();
-            p.maxInk = this.curLevel.MaxInk;
-            p.readOnly = false;
-
-            GameObject player = this.curLevelObj.transform.Find("Character").gameObject;
-            player.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
-            this.walls = GameObject.FindGameObjectsWithTag("wall");
-            if (!Debugging)
-            {
-                if (!NetworkManager.Instance.IsServer)
+                this.curLevelObj.transform.Find("Character").gameObject.SetActive(false);
+                foreach (var wall in walls)
                 {
-                    this.curLevelObj.transform.Find("Character").gameObject.SetActive(false);
-                    foreach (var wall in this.walls)
-                    {
-                        wall.SetActive(false);
-                    }
-                } else
-                {
-                    p.readOnly = true;
+                    wall.GetComponent<SpriteRenderer>().enabled = false;
                 }
+            } else
+            {
+                p.readOnly = true;
             }
+        }
+    }
+
+    private void _victory() {
+        GameObject.Find("LevelComplete").GetComponent<SpriteRenderer>().enabled = true;
+        FindObjectOfType<Painter>().readOnly = true;
+        GameObject oldPlayer = this.curLevelObj.transform.Find("Character").gameObject;
+        oldPlayer.SetActive(true);
+        oldPlayer.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        var walls = GameObject.FindGameObjectsWithTag("wall");
+
+        foreach (var wall in walls)
+        {
+            wall.GetComponent<SpriteRenderer>().enabled = true;
         }
     }
 }
