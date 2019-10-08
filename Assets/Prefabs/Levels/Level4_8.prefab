@@ -428,6 +428,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!95 &4074785462711379522
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2957196761263021917}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7a5810719e636b944995130e12548979, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3080752632543248314
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,7 +457,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1507320773586016480}
   m_Layer: 0
-  m_Name: Level4
+  m_Name: Level4_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -746,6 +765,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1507320773586016480}
     m_Modifications:
+    - target: {fileID: 9012171587541437828, guid: 7b7d840148980874da7452d19eefc455,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 9012171587541437825, guid: 7b7d840148980874da7452d19eefc455,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -810,11 +834,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 2.459081
-      objectReference: {fileID: 0}
-    - target: {fileID: 9012171587541437828, guid: 7b7d840148980874da7452d19eefc455,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b7d840148980874da7452d19eefc455, type: 3}
@@ -1104,12 +1123,12 @@ PrefabInstance:
     - target: {fileID: 3501748055312189009, guid: a403a59e9b72ca548a16e8fff9b0211b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.98
+      value: 7.21
       objectReference: {fileID: 0}
     - target: {fileID: 3501748055312189009, guid: a403a59e9b72ca548a16e8fff9b0211b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4
+      value: -0.74
       objectReference: {fileID: 0}
     - target: {fileID: 3501748055312189009, guid: a403a59e9b72ca548a16e8fff9b0211b,
         type: 3}
@@ -1158,6 +1177,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a403a59e9b72ca548a16e8fff9b0211b, type: 3}
+--- !u!1 &2957196761263021917 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3501748055312189012, guid: a403a59e9b72ca548a16e8fff9b0211b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1842719387082610953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2957196761263021912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3501748055312189009, guid: a403a59e9b72ca548a16e8fff9b0211b,
@@ -1171,6 +1196,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1507320773586016480}
     m_Modifications:
+    - target: {fileID: 9012171587541437828, guid: 7b7d840148980874da7452d19eefc455,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall (2)
+      objectReference: {fileID: 0}
     - target: {fileID: 9012171587541437825, guid: 7b7d840148980874da7452d19eefc455,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1236,11 +1266,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 2.4590807
       objectReference: {fileID: 0}
-    - target: {fileID: 9012171587541437828, guid: 7b7d840148980874da7452d19eefc455,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall (2)
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b7d840148980874da7452d19eefc455, type: 3}
 --- !u!4 &1805535986033497045 stripped
@@ -1256,6 +1281,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1507320773586016480}
     m_Modifications:
+    - target: {fileID: 9012171587541437828, guid: 7b7d840148980874da7452d19eefc455,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall
+      objectReference: {fileID: 0}
     - target: {fileID: 9012171587541437825, guid: 7b7d840148980874da7452d19eefc455,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1315,11 +1345,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.y
       value: 3.786983
-      objectReference: {fileID: 0}
-    - target: {fileID: 9012171587541437828, guid: 7b7d840148980874da7452d19eefc455,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b7d840148980874da7452d19eefc455, type: 3}
